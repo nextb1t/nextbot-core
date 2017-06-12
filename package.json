@@ -1,24 +1,27 @@
 {
-  "name": "ts-npm-module",
-  "version": "1.0.5",
-  "description": "A sample TypeScript npm module",
-  "main": "js/index.js",
-  "typings": "js/index",
+  "name": "nextbot",
+  "version": "0.1.0",
+  "description": "Cross-platform FSM constructor for chatbots",
+  "main": "dist/index.js",
+  "typings": "dist/index",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nodemon dist/test/index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/basarat/ts-npm-module.git"
+    "url": "git+https://github.com/nextb1t/nextb0t-core.git"
   },
   "keywords": [
-    "typescript",
-    "atom"
+    "typescript"
   ],
-  "author": "basaratali@gmail.com",
+  "author": "Alena Gilevskaya <alena@gilevskaya.ru>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/basarat/ts-npm-module/issues"
+    "url": "https://github.com/nextb1t/nextb0t-core/issues"
   },
-  "homepage": "https://github.com/basarat/ts-npm-module#readme"
+  "homepage": "https://github.com/nextb1t/nextb0t-core#readme",
+  "dependencies": {
+    "@types/core-js": "^0.9.41",
+    "@types/node": "^7.0.29"
+  }
 }
