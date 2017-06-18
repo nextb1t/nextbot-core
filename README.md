@@ -1,4 +1,17 @@
-# ts-npm-module
-Open this probject in [`atom-typescript`](https://atom.io/packages/atom-typescript). Press F6 to build. And then `npm publish` away.
+# ts-jest-wallaby-vscode
+Template project with: Typescript + Jest tests + Wallaby config + VSCode settings  
+npm test - runs jest tests  
 
-This project can be consumed flawlessly from the sister project [ts-npm-module-consume](https://github.com/basarat/ts-npm-module-consume)
+### Typescript setup with VSCode
+Ctrl+Shift+p  
+Configure Task Runner  
+TypeScript - Watch Mode  
+
+
+### Wallaby setup in VSCode
+Ctrl+Shift+=  
+Select Configuration File  
+wallaby.js  
+
+Ctrl+Shift+=  
+Start

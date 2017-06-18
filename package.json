@@ -1,27 +1,45 @@
 {
-  "name": "nextbot",
-  "version": "0.1.0",
+  "name": "nextbot-core",
+  "version": "1.1.0",
   "description": "Cross-platform FSM constructor for chatbots",
   "main": "dist/index.js",
-  "typings": "dist/index",
   "scripts": {
-    "test": "nodemon dist/test/index.js"
+    "start": "node ./dist/index.js",
+    "dev": "nodemon ./dist/app.js",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nextb1t/nextb0t-core.git"
+    "url": "git+https://github.com/nextb1t/nextbot-core.git"
   },
   "keywords": [
     "typescript"
   ],
   "author": "Alena Gilevskaya <alena@gilevskaya.ru>",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/nextb1t/nextb0t-core/issues"
   },
   "homepage": "https://github.com/nextb1t/nextb0t-core#readme",
+  "license": "MIT",
   "dependencies": {
-    "@types/core-js": "^0.9.41",
-    "@types/node": "^7.0.29"
+    "typescript.events": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^19.2.4",
+    "nodemon": "^1.11.0",
+    "typescript": "^2.3.4",
+    "jest": "^19.0.2",
+    "ts-jest": "^20.0.5"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ]
   }
 }
