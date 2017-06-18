@@ -1,5 +1,5 @@
 # ts-jest-wallaby-vscode
-Template project with: Typescript + Jest tests + Wallaby config + VSCode settings  
+Project with: Typescript + Jest tests + Wallaby config + VSCode settings  
 npm test - runs jest tests  
 
 ### Typescript setup with VSCode
