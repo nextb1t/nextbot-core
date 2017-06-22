@@ -1,5 +1,6 @@
 import { Event } from "typescript.events"
 import BotTransitions from './transitions'
+import State from './state'
 import { ITrResFull, IUserMessage,
   IBotLogic, IBotText, IBotWait, IBotActions } from './ibotcontent'
 import { START, IDLE } from '../config'
@@ -8,22 +9,23 @@ import { START, IDLE } from '../config'
 export class UserBotFSM extends Event {
   private readonly userId: string
   private transitions: BotTransitions
-  private state: string
+  private state: State
   private waitInput: boolean
 
   constructor(userId: string, botLogic: IBotLogic, botText: IBotText, botWait?: IBotWait, 
     botActions?: IBotActions, platform?: string, botId?: string) {
     super()
+    this.userId = userId
     this.transitions = new BotTransitions(userId, botLogic, botText, botWait, botActions)
     // todo: search for the last state
-    this.run(START)
+    this.run(new State(START))
   }
 
-  private run(stateName: string) {
+  private run(state: State) {
     console.log('-----------------------')
-    console.log(`running "${stateName}"`)
-    this.state = stateName
-    console.log('ZZ wait input:', this.waitInput)
+    console.log(`running "${state}"`)
+    this.state = state
+    if (this.waitInput) console.log('.. waiting input')
     if (!this.waitInput) this.tryTransition()
   }
 
@@ -36,8 +38,9 @@ export class UserBotFSM extends Event {
     this.transitions.make(this.state, symbol)
       .then((res: ITrResFull) => {
         // console.log('tried transition:', res)
-        if (res.waitBefore > 0) console.log('ZZ waiting:', res.waitBefore)
+        if (res.waitBefore > 0) console.log('.. waiting:', res.waitBefore)
         setTimeout(() => {
+          res.userId = this.userId
           if (res.message) this.emit('message', res)
           if (this.waitInput && !res.waitInput) this.waitInput = res.waitInput
           this.waitInput = res.waitInput

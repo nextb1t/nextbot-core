@@ -1,5 +1,6 @@
 import { IBotLogic, IBotText, IBotWait, IBotActions,
   ITrRes } from "./nextbot/ibotcontent"
+import State from './nextbot/state'
 import { START, IDLE, DEFAULT } from './config'
 
 export let botText: IBotText = {
@@ -9,7 +10,9 @@ export let botText: IBotText = {
 
   intro: { txt: "Hello, world!" },
 
-  group_message: { txt: "Group messgae will be here" },
+  group_message: [{ txt: "Group message here" },
+                  { txt: "And here" },
+                  { txt: "Last One"}],
 
   random: { txt: ["Whoa", "Boom"] },
 
@@ -51,7 +54,7 @@ export let botLogic: IBotLogic = {
 }
 
 export let botWait: IBotWait = {
-  _default: { wait_before: 1000, typing_on: false, wait_input: 'auto' },
+  _default: { wait_before: 1500, typing_on: true, wait_input: 'auto' },
   // 'auto' - doesn't wait afrer text and image messages
   // and it doesn't wait between the grouped messages
   // it waits after the button messages
@@ -67,7 +70,7 @@ export let botActions: IBotActions = {
 
     return new Promise((resolve, reject) => {
       // console.log('CUSTOM TRANSITION:', params, text)
-      let res: ITrRes = { nextState: 'custom' }
+      let res: ITrRes = { nextState: new State('custom') }
       res.message = { txt: "Text message with some " + text.some + ' and ' + params }
       resolve(res)
     })

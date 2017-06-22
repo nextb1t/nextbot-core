@@ -1,6 +1,7 @@
 export declare let START: string;
 export declare let IDLE: string;
 export declare let DEFAULT: string;
+export declare let STATEDIV: string;
 export declare let CUSTOM: string;
 export declare let BOTWAIT_DEFAULT: {
     wait_before: number;
@@ -19,4 +20,7 @@ export declare let MESTYPES: {
     tbuttons: string;
     buttons: string;
     image: string;
+};
+export declare let log: {
+    inline: (str: any) => void;
 };

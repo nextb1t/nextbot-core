@@ -1,11 +1,11 @@
 {
-  "name": "nextbot-core",
-  "version": "1.1.0",
+  "name": "nextbot",
+  "version": "1.2.0",
   "description": "Cross-platform FSM constructor for chatbots",
   "main": "dist/index.js",
   "scripts": {
     "start": "node ./dist/index.js",
-    "dev": "nodemon ./dist/app.js",
+    "dev": "nodemon ./dist/index.js",
     "test": "jest"
   },
   "repository": {

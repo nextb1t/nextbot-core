@@ -2,18 +2,21 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const typescript_events_1 = require("typescript.events");
 const transitions_1 = require("./transitions");
+const state_1 = require("./state");
 const config_1 = require("../config");
 class UserBotFSM extends typescript_events_1.Event {
     constructor(userId, botLogic, botText, botWait, botActions, platform, botId) {
         super();
+        this.userId = userId;
         this.transitions = new transitions_1.default(userId, botLogic, botText, botWait, botActions);
-        this.run(config_1.START);
+        this.run(new state_1.default(config_1.START));
     }
-    run(stateName) {
+    run(state) {
         console.log('-----------------------');
-        console.log(`running "${stateName}"`);
-        this.state = stateName;
-        console.log('ZZ wait input:', this.waitInput);
+        console.log(`running "${state}"`);
+        this.state = state;
+        if (this.waitInput)
+            console.log('.. waiting input');
         if (!this.waitInput)
             this.tryTransition();
     }
@@ -25,8 +28,9 @@ class UserBotFSM extends typescript_events_1.Event {
         this.transitions.make(this.state, symbol)
             .then((res) => {
             if (res.waitBefore > 0)
-                console.log('ZZ waiting:', res.waitBefore);
+                console.log('.. waiting:', res.waitBefore);
             setTimeout(() => {
+                res.userId = this.userId;
                 if (res.message)
                     this.emit('message', res);
                 if (this.waitInput && !res.waitInput)

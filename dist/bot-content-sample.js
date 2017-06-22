@@ -1,11 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const state_1 = require("./nextbot/state");
 exports.botText = {
     _custom: {
         myCustomTransition: { some: "data-here" }
     },
     intro: { txt: "Hello, world!" },
-    group_message: { txt: "Group messgae will be here" },
+    group_message: [{ txt: "Group message here" },
+        { txt: "And here" },
+        { txt: "Last One" }],
     random: { txt: ["Whoa", "Boom"] },
     question: { txt: "I'm a sample bot and who are you?" },
     param_message: { txt: { def: "First time here",
@@ -34,12 +37,12 @@ exports.botLogic = {
     }
 };
 exports.botWait = {
-    _default: { wait_before: 1000, typing_on: false, wait_input: 'auto' },
+    _default: { wait_before: 1500, typing_on: true, wait_input: 'auto' },
 };
 exports.botActions = {
     myCustomTransition: (userId, params, text, platform, botId) => {
         return new Promise((resolve, reject) => {
-            let res = { nextState: 'custom' };
+            let res = { nextState: new state_1.default('custom') };
             res.message = { txt: "Text message with some " + text.some + ' and ' + params };
             resolve(res);
         });

@@ -6,7 +6,7 @@ export declare class UserBotFSM extends Event {
     private state;
     private waitInput;
     constructor(userId: string, botLogic: IBotLogic, botText: IBotText, botWait?: IBotWait, botActions?: IBotActions, platform?: string, botId?: string);
-    private run(stateName);
+    private run(state);
     procesSymbol(symbol: string, type?: string, params?: any): void;
     private tryTransition(symbol?);
 }

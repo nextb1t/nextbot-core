@@ -2,8 +2,11 @@ import { IBotLogic, IBotText, IBotWait, IBotActions,
   IBotText_Message, IBotWait_Item, IBotLogic_Transition,
   ITrRes, ITrResFull } from './ibotcontent'
 
+import State from './state'
+
 import { IDLE, DEFAULT, CUSTOM, MESTYPES,
-  BOTWAIT_DEFAULT, BOTWAIT_INPUTAUTO } from '../config'
+  BOTWAIT_DEFAULT, BOTWAIT_INPUTAUTO, log } from '../config'
+
 
 export class BotTransitions { 
   private readonly userId: string
@@ -29,12 +32,12 @@ export class BotTransitions {
     this.botId = botId
   }
 
-  public make(stateName: string, symbol?: string): Promise<ITrRes> {
+  public make(state: State, symbol?: string): Promise<ITrRes> {
     return new Promise((resolve, reject) => {
-      console.log('::', stateName, '->')
+      log.inline(`:: ${state} -> `)
 
       let trInfo: IBotLogic_Transition
-      let trText: IBotText_Message | undefined
+      // let trText: IBotText_Message | undefined
 
       // if from default in botLogic
       if (symbol && (DEFAULT in this.botLogic) && (symbol in this.botLogic[DEFAULT])) {
@@ -42,64 +45,91 @@ export class BotTransitions {
 
       // if not from default
       } else {
-        let trInfoData = this.botLogic[stateName]
+        let trInfoData = this.botLogic[state.group]
 
-        if (this.isConditional(trInfoData)) {
-          console.log('conditional transition')
+        // checking if transition is conditional
+        if (!('next' in trInfoData) && !('func' in trInfoData)) {
+          log.inline('(conditional transition)')
           if (!symbol || !(symbol in trInfoData)) {
             if (!symbol) console.log('need a symbol for conditional transition')
             else if (!(symbol in trInfoData)) console.log('not this symbol, keep on waiting')
-            resolve({ nextState: stateName,
+            resolve({ nextState: state,
                       waitInput: true }); return
           }
-          console.log('yay, this symbol works:', symbol)
-          trInfo = this.botLogic[stateName][symbol]
+          log.inline(`: ${symbol}`)
+          trInfo = this.botLogic[state.group][symbol]
 
         } else { 
-          trInfo = this.botLogic[stateName]
-          trText = (stateName in this.botText) 
-            ? this.botText[stateName] : undefined 
+          log.inline('(unconditional transition) ')
+          trInfo = this.botLogic[state.group]
         }
       }
 
-      this.makeUnitTransition(stateName, trInfo).then((res) => {
+      this.makeUnitTransition(state, trInfo).then((res) => {
         resolve(res)
       }).catch((error) => reject(error)) 
     })
   }
 
-  isConditional(stateLogic): boolean {
-    return (!('next' in stateLogic) && !('func' in stateLogic))
-  }
-
-  public makeUnitTransition(state: string, trInfo: IBotLogic_Transition): Promise<ITrResFull> {
+  private makeUnitTransition(state: State, trInfo: IBotLogic_Transition): Promise<ITrResFull> {
+    // console.log(`making unit transition: ${state}`, trInfo)
     return new Promise((resolve, reject) => {
       
       if (!state || !trInfo)
         reject('Initial state or transition info are not specified')
 
-      let res: ITrRes, wait: IBotWait_Item
+      let res: ITrRes = {}, wait: IBotWait_Item
 
       // Default Transition Case
       if ('next' in trInfo) {
-        res = { nextState: trInfo.next }
-        console.log('->', res.nextState)
+        let nextState = state // init nextState with the current state
+        let textData = this.botText[state.group] // init textData with the current state text
+        let isNextGroup = Array.isArray(this.botText[trInfo.next])
 
-        if (res.nextState !== IDLE) {
-          if (res.nextState in this.botText) {
-            let textData = this.botText[res.nextState]
+        if (trInfo.next !== (IDLE)) {
+        // if next in trInfo and tr is not to idle 
+        // making a default unit transition with correct params
 
-            let textParams = ('params' in trInfo) ? trInfo.params : undefined
+          // console.log(`('index' in state)`, ('index' in state))
+          // console.log(`isNextGroup`, isNextGroup)
+          // if ('index' in state) console.log(`isLastInGroup`, state.index, textData.length-1, (state.index === textData.length-1))
 
-            let text: IBotText_Message = this.parseText(textData, textParams)
-            res.message = text
+          // Not a gropped state or Last item
+          if ((!('index' in state) && !isNextGroup)
+              || (('index' in state) && (state.index === textData.length-1))) {
+            // console.log('++ not a groupped state / last item')
+            nextState = new State(trInfo.next)
+            textData = this.botText[nextState.group]
+          } else {
 
-            wait = (this.botWait && (res.nextState in this.botWait))
-              ? this.botWait[res.nextState]
-              : undefined
-          } else reject('Default transition requires text in BotText')
-        }
+          // Gropped state: first or middle item
+            // console.log('++ groupped state first or middle item')
+            
+            // first item
+            if(!('index' in state) && isNextGroup) {
+              // console.log('-- first item of the gropped state')
+              nextState.first(trInfo.next)
+              textData = this.botText[nextState.group][nextState.index]
 
+            // midlle item
+            } else if (('index' in state) && (state.index < textData.length)) {
+              // console.log('-- middle item of the gropped state')
+              nextState.next()
+              textData = textData[nextState.index]          
+            }
+          } // end of nextState & textData calc
+
+          let textParams = ('params' in trInfo) ? trInfo.params : undefined
+          res.message = this.parseText(textData, textParams)
+
+          wait = (this.botWait && (nextState.group in this.botWait))
+            ? this.botWait[nextState.group]
+            : undefined
+          // } else reject('Default transition requires text in BotText')
+        } // end of not idle
+
+        res.nextState = nextState
+        console.log(`-> ${nextState}`)
         resolve(this.fillRes(res, wait)); return
 
       // Custom Transiion Case
@@ -115,7 +145,9 @@ export class BotTransitions {
 
         // console.log('CUSTOM', params, text, action)
         this.botActions[action](this.userId, params, text, this.platform, this.botId)
-        .then((res) => { resolve(this.fillRes(res)); return })
+        .then((res) => { 
+          console.log(`-> ${res.nextState}`)
+          resolve(this.fillRes(res)); return })
       }
     })
   }
@@ -139,7 +171,7 @@ export class BotTransitions {
   private fillRes(prevres: ITrRes, wait?: IBotWait_Item): ITrResFull {
     let res = prevres, botwait: IBotWait_Item = this.botDefaultWait
     
-    if (res.nextState === IDLE) {
+    if (res.nextState.is(IDLE)) {
       res.waitBefore = 0; res.waitInput = true; res.typingOn = false
       return <ITrResFull>res
     }

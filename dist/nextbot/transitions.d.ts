@@ -1,4 +1,5 @@
-import { IBotLogic, IBotText, IBotWait, IBotActions, IBotLogic_Transition, ITrRes, ITrResFull } from './ibotcontent';
+import { IBotLogic, IBotText, IBotWait, IBotActions, ITrRes } from './ibotcontent';
+import State from './state';
 export declare class BotTransitions {
     private readonly userId;
     private readonly botLogic;
@@ -9,9 +10,8 @@ export declare class BotTransitions {
     private readonly platform;
     private readonly botId;
     constructor(userId: string, botLogic: IBotLogic, botText: IBotText, botWait?: IBotWait, botActions?: IBotActions, platform?: string, botId?: string);
-    make(stateName: string, symbol?: string): Promise<ITrRes>;
-    isConditional(stateLogic: any): boolean;
-    makeUnitTransition(state: string, trInfo: IBotLogic_Transition): Promise<ITrResFull>;
+    make(state: State, symbol?: string): Promise<ITrRes>;
+    private makeUnitTransition(state, trInfo);
     private calcDefaultWait();
     private fillRes(prevres, wait?);
     private calcMessageType(mdata);

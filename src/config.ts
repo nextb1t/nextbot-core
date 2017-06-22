@@ -1,6 +1,7 @@
 export let START = 'start'
 export let IDLE = 'idle'
 export let DEFAULT = '_default'
+export let STATEDIV = '_'
 
 export let CUSTOM = '_custom'
 
@@ -14,4 +15,10 @@ export let MESTYPES = {
   tbuttons: 'tbtn',
   buttons: 'btn',
   image: 'img'
+}
+
+export let log = {
+  inline: function(str) {
+    process.stdout.write(str)
+  }
 }

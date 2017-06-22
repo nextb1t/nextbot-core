@@ -1,5 +1,7 @@
+import State from './state'
+
 export interface ITrRes {
-  nextState: string, 
+  nextState?: State, 
   waitInput?: boolean,  
   waitBefore?: number,
   typingOn?: boolean,
@@ -8,12 +10,13 @@ export interface ITrRes {
 }
 
 export interface ITrResFull {
-  nextState: string, 
+  nextState: State, 
   waitInput: boolean,  
   waitBefore: number,
   typingOn: boolean,
   message?: IBotText_Message
-  type?: string
+  type?: string,
+  userId?: string
 }
 
 export interface IUserMessage {
@@ -37,7 +40,7 @@ export interface IBotLogic_Transition {
   params?: any
 }
 
-export interface IBotText { [state: string]: IBotText_Message }
+export interface IBotText { [state: string]: IBotText_Message | Array<IBotText_Message> }
 export interface IBotText_Message { }
 interface IBotText_TextMessage extends IBotText_Message { txt: string }
 interface IBotText_Button { title: string, callback: string }
@@ -57,7 +60,7 @@ export interface IBotWait_Item {
 export interface IBotActions {
   [action: string]: IBotActions_Function
 }
-interface IBotActions_Function {
+export interface IBotActions_Function {
   (userId: string, params?: any, text?: any,
     platform?: string, botId?: string): Promise<ITrRes>
 }

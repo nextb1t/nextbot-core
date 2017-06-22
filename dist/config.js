@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.START = 'start';
 exports.IDLE = 'idle';
 exports.DEFAULT = '_default';
+exports.STATEDIV = '_';
 exports.CUSTOM = '_custom';
 exports.BOTWAIT_DEFAULT = {
     wait_before: 0, typing_on: false, wait_input: 'auto'
@@ -15,5 +16,10 @@ exports.MESTYPES = {
     tbuttons: 'tbtn',
     buttons: 'btn',
     image: 'img'
+};
+exports.log = {
+    inline: function (str) {
+        process.stdout.write(str);
+    }
 };
 //# sourceMappingURL=config.js.map
