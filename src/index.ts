@@ -1,9 +1,10 @@
 export { IBotLogic, IBotText, IBotWait, IBotActions, IBotContent } from "./nextbot/ibotcontent"
-export { Nextbot } from "./nextbot/nextbot"
+import { Nextbot } from "./nextbot/nextbot"
+export default Nextbot
 // import BotTransitions from "./nextbot/transitions"
-import { botLogic, botText, botWait, botActions } from "./bot-content-sample"
-import { IBotLogic, IBotText, IBotWait, IBotActions, IBotContent } from "./nextbot/ibotcontent"
-import Nextbot from "./nextbot/nextbot"
+// import { botLogic, botText, botWait, botActions } from "./bot-content-sample"
+// import { IBotLogic, IBotText, IBotWait, IBotActions, IBotContent } from "./nextbot/ibotcontent"
+// import Nextbot from "./nextbot/nextbot"
 
 // let bot = new Nextbot(botLogic, botText, botWait, botActions)
 

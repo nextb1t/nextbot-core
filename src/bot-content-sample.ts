@@ -70,7 +70,7 @@ export let botActions: IBotActions = {
 
     return new Promise((resolve, reject) => {
       // console.log('CUSTOM TRANSITION:', params, text)
-      let res: ITrRes = { nextState: new State('custom') }
+      let res: ITrRes = { nextState: 'custom' }
       res.message = { txt: "Text message with some " + text.some + ' and ' + params }
       resolve(res)
     })
