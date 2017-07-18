@@ -1,14 +1,13 @@
-export { IBotLogic, IBotText, IBotWait, IBotActions, IBotContent } from "./nextbot/ibotcontent"
+export { IBotLogic, IBotText, IBotWait, IBotActions, IBotContent, ITrRes } from "./nextbot/ibotcontent"
 import { Nextbot } from "./nextbot/nextbot"
 export default Nextbot
+
 // import BotTransitions from "./nextbot/transitions"
+
 // import { botLogic, botText, botWait, botActions } from "./bot-content-sample"
 // import { IBotLogic, IBotText, IBotWait, IBotActions, IBotContent } from "./nextbot/ibotcontent"
-// import Nextbot from "./nextbot/nextbot"
 
 // let bot = new Nextbot(botLogic, botText, botWait, botActions)
-
-// bot.start('123')
 
 // bot.on('message', (event) => {
 //   switch(event.type) {
@@ -26,8 +25,10 @@ export default Nextbot
 //   }
 // })
 
+// bot.start('123')
+
 // setTimeout(() => {
-//   bot.input('123', 'B1')
+//   bot.input('user-id', 'B1')
 // }, 30000)
 
 // setTimeout(() => {

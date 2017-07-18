@@ -1,2 +1,3 @@
-export { IBotLogic, IBotText, IBotWait, IBotActions, IBotContent } from "./nextbot/ibotcontent";
-export { Nextbot } from "./nextbot/nextbot";
+export { IBotLogic, IBotText, IBotWait, IBotActions, IBotContent, ITrRes } from "./nextbot/ibotcontent";
+import { Nextbot } from "./nextbot/nextbot";
+export default Nextbot;

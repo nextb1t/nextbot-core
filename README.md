@@ -1,4 +1,4 @@
-# Nextbot 1.2.0
+# Nextbot 1.2.1
 
 Nextbot is a cross-platform constructor for chatbots based on the Finite-State Machine architecture.  
 You describe bot states and transitions beetween states, Nextbot does all the rest.

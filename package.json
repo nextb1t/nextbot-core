@@ -1,6 +1,6 @@
 {
   "name": "nextbot",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Cross-platform FSM constructor for chatbots",
   "main": "dist/index.js",
   "scripts": {
@@ -13,7 +13,7 @@
     "url": "git+https://github.com/nextb1t/nextbot-core.git"
   },
   "keywords": [
-    "typescript"
+    "nextbot", "typescript", "bot", "chatbot", "bot framework", "fsm"
   ],
   "author": "Alena Gilevskaya <alena@gilevskaya.ru>",
   "bugs": {

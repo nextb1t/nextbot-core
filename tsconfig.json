@@ -11,18 +11,18 @@
     "suppressImplicitAnyIndexErrors": true,
     "alwaysStrict": true,
     "outDir": "dist",
-    "typeRoots": [
-      "./node_modules/@types"
-    ],
+    "typeRoots": [ "node_modules/@types" ],
     "types": [
       "jest"
     ]
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "examples/typescript"
   ],
   "exclude": [
     "test/**/*.test.ts",
+    "examples/javascript",
     "node_modules"
   ]
 }

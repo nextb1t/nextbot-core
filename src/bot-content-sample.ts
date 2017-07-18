@@ -59,9 +59,9 @@ export let botWait: IBotWait = {
   // and it doesn't wait between the grouped messages
   // it waits after the button messages
 
-  // question: { wait_input: 'yes' },
-  // buttons: { wait_input: 'yes' },
-  // farawell: { wait_before: 500, typing_on: false, wait_input: 'no' }
+  question: { wait_before: 5000, wait_input: 'yes' },
+  buttons: { wait_input: 'yes' },
+  farawell: { wait_before: 500, typing_on: false, wait_input: 'no' }
 }
 
 export let botActions: IBotActions = {
@@ -76,3 +76,4 @@ export let botActions: IBotActions = {
     })
   }
 }
+

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const state_1 = require("./state");
+const nextbot_1 = require("./nextbot");
 const config_1 = require("../config");
 class BotTransitions {
     constructor(userId, botLogic, botText, botWait, botActions, platform, botId) {
@@ -15,7 +16,7 @@ class BotTransitions {
     }
     make(state, symbol) {
         return new Promise((resolve, reject) => {
-            config_1.log.inline(`:: ${state} -> `);
+            nextbot_1.log.inline(`:: ${state} -> `);
             let trInfo;
             if (symbol && (config_1.DEFAULT in this.botLogic) && (symbol in this.botLogic[config_1.DEFAULT])) {
                 trInfo = this.botLogic[config_1.DEFAULT][symbol];
@@ -23,21 +24,21 @@ class BotTransitions {
             else {
                 let trInfoData = this.botLogic[state.group];
                 if (!('next' in trInfoData) && !('func' in trInfoData)) {
-                    config_1.log.inline('(conditional transition)');
+                    nextbot_1.log.inline('(conditional transition)');
                     if (!symbol || !(symbol in trInfoData)) {
                         if (!symbol)
-                            console.log('need a symbol for conditional transition');
+                            nextbot_1.log.debug('\nneed a symbol for conditional transition');
                         else if (!(symbol in trInfoData))
-                            console.log('not this symbol, keep on waiting');
+                            nextbot_1.log.debug('\nnot this symbol, keep on waiting');
                         resolve({ nextState: state,
                             waitInput: true });
                         return;
                     }
-                    config_1.log.inline(`: ${symbol}`);
+                    nextbot_1.log.inline(`: ${symbol}`);
                     trInfo = this.botLogic[state.group][symbol];
                 }
                 else {
-                    config_1.log.inline('(unconditional transition) ');
+                    nextbot_1.log.inline('(unconditional transition) ');
                     trInfo = this.botLogic[state.group];
                 }
             }
@@ -78,7 +79,7 @@ class BotTransitions {
                         : undefined;
                 }
                 res.nextState = nextState;
-                console.log(`-> ${nextState}`);
+                nextbot_1.log.debug(`-> ${nextState}`);
                 resolve(this.fillRes(res, wait));
                 return;
             }
@@ -91,7 +92,8 @@ class BotTransitions {
                     ? this.botText._custom[action] : undefined;
                 this.botActions[action](this.userId, params, text, this.platform, this.botId)
                     .then((res) => {
-                    console.log(`-> ${res.nextState}`);
+                    nextbot_1.log.debug(`-> ${res.nextState}`);
+                    res.nextState = new state_1.default(res.nextState);
                     resolve(this.fillRes(res));
                     return;
                 });
@@ -177,7 +179,7 @@ class BotTransitions {
             return 'text';
         }
         else
-            throw 'Unknown message type';
+            return 'other';
     }
     parseText(mdata, params) {
         let res = {};
@@ -223,6 +225,9 @@ class BotTransitions {
                 }
                 else
                     throw 'Text buttons should be an array';
+            }
+            else if (type === config_1.MESTYPES.image) {
+                res[type] = mdata[type];
             }
         }
         return res;

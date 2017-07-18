@@ -9,7 +9,7 @@ exports.BOTWAIT_DEFAULT = {
     wait_before: 0, typing_on: false, wait_input: 'auto'
 };
 exports.BOTWAIT_INPUTAUTO = {
-    text: false, image: false, buttons: true, tbuttons: true, empty: true
+    text: false, image: false, buttons: true, tbuttons: true, empty: true, other: false
 };
 exports.MESTYPES = {
     text: 'txt',
@@ -22,4 +22,18 @@ exports.log = {
         process.stdout.write(str);
     }
 };
+class Logger {
+    constructor(isDebug) {
+        this.isDebug = isDebug;
+    }
+    debug(str) {
+        if (this.isDebug)
+            console.log(str);
+    }
+    inline(str) {
+        if (this.isDebug)
+            process.stdout.write(str);
+    }
+}
+exports.Logger = Logger;
 //# sourceMappingURL=config.js.map

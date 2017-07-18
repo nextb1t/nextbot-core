@@ -1,6 +1,6 @@
 import State from './state';
 export interface ITrRes {
-    nextState?: State;
+    nextState?: State | string;
     waitInput?: boolean;
     waitBefore?: number;
     typingOn?: boolean;

@@ -1,5 +1,6 @@
 import { Event } from "typescript.events";
 import { IBotLogic, IBotText, IBotWait, IBotActions } from './ibotcontent';
+export declare let log: any;
 export declare class UserBotFSM extends Event {
     private readonly userId;
     private transitions;
@@ -18,7 +19,10 @@ export declare class Nextbot extends Event {
     private readonly platform;
     private readonly botId;
     private userbots;
-    constructor(botLogic: IBotLogic, botText: IBotText, botWait?: IBotWait, botActions?: IBotActions, platform?: string, botId?: string);
+    constructor(botLogic: IBotLogic, botText: IBotText, botWait?: IBotWait, botActions?: IBotActions, botInfo?: {
+        platform?: string;
+        botId?: string;
+    }, isDebug?: boolean);
     start(userId: string): void;
     private findOrCreateBotFSM(userId);
     input(userId: string, symbol: string, type?: string, params?: any): void;

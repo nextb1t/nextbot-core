@@ -3,8 +3,9 @@ import BotTransitions from './transitions'
 import State from './state'
 import { ITrResFull, IUserMessage,
   IBotLogic, IBotText, IBotWait, IBotActions } from './ibotcontent'
-import { START, IDLE } from '../config'
+import { START, IDLE, Logger } from '../config'
 
+export let log
 
 export class UserBotFSM extends Event {
   private readonly userId: string
@@ -22,15 +23,15 @@ export class UserBotFSM extends Event {
   }
 
   private run(state: State) {
-    console.log('-----------------------')
-    console.log(`running "${state}"`)
+    log.debug('-----------------------')
+    log.debug(`running "${state}"`)
     this.state = state
-    if (this.waitInput) console.log('.. waiting input')
+    if (this.waitInput) log.debug('.. waiting input')
     if (!this.waitInput) this.tryTransition()
   }
 
   public procesSymbol(symbol: string, type?: string, params?: any) {
-    console.log('processing symbol:', symbol)
+    log.debug('processing symbol:', symbol)
     this.tryTransition(symbol)
   }
 
@@ -38,7 +39,7 @@ export class UserBotFSM extends Event {
     this.transitions.make(this.state, symbol)
       .then((res: ITrResFull) => {
         // console.log('tried transition:', res)
-        if (res.waitBefore > 0) console.log('.. waiting:', res.waitBefore)
+        if (res.waitBefore > 0) log.debug('.. waiting:', res.waitBefore)
         setTimeout(() => {
           res.userId = this.userId
           if (res.message) this.emit('message', res)
@@ -63,14 +64,25 @@ export class Nextbot extends Event {
   private userbots: { [userId: string]: UserBotFSM }
 
   constructor(botLogic: IBotLogic, botText: IBotText, botWait?: IBotWait, botActions?: IBotActions,
-    platform?: string, botId?: string) { 
+    botInfo?: { platform?: string, botId?: string }, isDebug = false ) { 
     super()
     this.botLogic = botLogic
     this.botText = botText
     this.botWait = botWait
     this.botActions = botActions
-    this.platform = platform
-    this.botId = botId
+
+    log = new Logger(isDebug)
+    
+    let i = ''
+    if (botInfo && 'platform' in botInfo) {
+      this.platform = botInfo.platform
+      i += botInfo.platform + '|'
+    }
+    if (botInfo && 'botId' in botInfo) {
+      this.botId = botInfo.botId
+      i += botInfo.botId
+    }
+    console.log(`# API bot ${i} has been created`)
   }
 
   public start(userId: string) {

@@ -1,14 +1,19 @@
 const { Nextbot } = require('../../dist')
 
 let botLogic = {
-  start: { func: "myCustomTransitionFunction",params: "Some Params" },
+  start: { func: "myCustomTransitionFunction", params: "Some Params" },
   customTransitionState: { next: "idle" }
+
+  // start: { next: 'custom_state', .. },
+  // custom_state: ...
 }
 
 let botText = {
   _custom: {
     customTransitionState: { more: "More Params Here" }
   }
+
+  // custom_state: { /// 
 }
 
 let botActions = {
@@ -20,6 +25,10 @@ let botActions = {
     let res = { nextState: "customTransitionState" }
     res.message = { txt: "Text message with" + params + ' and ' + text.some }
     Promise.resolve(res)
+  },
+
+  custom_state() {
+    
   }
 }
 

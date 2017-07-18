@@ -14,6 +14,7 @@ export declare let BOTWAIT_INPUTAUTO: {
     buttons: boolean;
     tbuttons: boolean;
     empty: boolean;
+    other: boolean;
 };
 export declare let MESTYPES: {
     text: string;
@@ -24,3 +25,9 @@ export declare let MESTYPES: {
 export declare let log: {
     inline: (str: any) => void;
 };
+export declare class Logger {
+    private readonly isDebug;
+    constructor(isDebug: boolean);
+    debug(str: any): void;
+    inline(str: any): void;
+}

@@ -12,23 +12,23 @@ class UserBotFSM extends typescript_events_1.Event {
         this.run(new state_1.default(config_1.START));
     }
     run(state) {
-        console.log('-----------------------');
-        console.log(`running "${state}"`);
+        exports.log.debug('-----------------------');
+        exports.log.debug(`running "${state}"`);
         this.state = state;
         if (this.waitInput)
-            console.log('.. waiting input');
+            exports.log.debug('.. waiting input');
         if (!this.waitInput)
             this.tryTransition();
     }
     procesSymbol(symbol, type, params) {
-        console.log('processing symbol:', symbol);
+        exports.log.debug('processing symbol:', symbol);
         this.tryTransition(symbol);
     }
     tryTransition(symbol) {
         this.transitions.make(this.state, symbol)
             .then((res) => {
             if (res.waitBefore > 0)
-                console.log('.. waiting:', res.waitBefore);
+                exports.log.debug('.. waiting:', res.waitBefore);
             setTimeout(() => {
                 res.userId = this.userId;
                 if (res.message)
@@ -45,14 +45,23 @@ class UserBotFSM extends typescript_events_1.Event {
 }
 exports.UserBotFSM = UserBotFSM;
 class Nextbot extends typescript_events_1.Event {
-    constructor(botLogic, botText, botWait, botActions, platform, botId) {
+    constructor(botLogic, botText, botWait, botActions, botInfo, isDebug = false) {
         super();
         this.botLogic = botLogic;
         this.botText = botText;
         this.botWait = botWait;
         this.botActions = botActions;
-        this.platform = platform;
-        this.botId = botId;
+        exports.log = new config_1.Logger(isDebug);
+        let i = '';
+        if (botInfo && 'platform' in botInfo) {
+            this.platform = botInfo.platform;
+            i += botInfo.platform + '|';
+        }
+        if (botInfo && 'botId' in botInfo) {
+            this.botId = botInfo.botId;
+            i += botInfo.botId;
+        }
+        console.log(`# API bot ${i} has been created`);
     }
     start(userId) {
         this.findOrCreateBotFSM(userId);

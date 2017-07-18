@@ -1,11 +1,10 @@
 import { IBotLogic, IBotText, IBotWait, IBotActions,
   IBotText_Message, IBotWait_Item, IBotLogic_Transition,
   ITrRes, ITrResFull } from './ibotcontent'
-
 import State from './state'
-
+import { log } from './nextbot'
 import { IDLE, DEFAULT, CUSTOM, MESTYPES,
-  BOTWAIT_DEFAULT, BOTWAIT_INPUTAUTO, log } from '../config'
+  BOTWAIT_DEFAULT, BOTWAIT_INPUTAUTO } from '../config'
 
 
 export class BotTransitions { 
@@ -51,8 +50,8 @@ export class BotTransitions {
         if (!('next' in trInfoData) && !('func' in trInfoData)) {
           log.inline('(conditional transition)')
           if (!symbol || !(symbol in trInfoData)) {
-            if (!symbol) console.log('need a symbol for conditional transition')
-            else if (!(symbol in trInfoData)) console.log('not this symbol, keep on waiting')
+            if (!symbol) log.debug('\nneed a symbol for conditional transition')
+            else if (!(symbol in trInfoData)) log.debug('\nnot this symbol, keep on waiting')
             resolve({ nextState: state,
                       waitInput: true }); return
           }
@@ -129,7 +128,7 @@ export class BotTransitions {
         } // end of not idle
 
         res.nextState = nextState
-        console.log(`-> ${nextState}`)
+        log.debug(`-> ${nextState}`)
         resolve(this.fillRes(res, wait)); return
 
       // Custom Transiion Case
@@ -146,7 +145,8 @@ export class BotTransitions {
         // console.log('CUSTOM', params, text, action)
         this.botActions[action](this.userId, params, text, this.platform, this.botId)
         .then((res) => { 
-          console.log(`-> ${res.nextState}`)
+          log.debug(`-> ${res.nextState}`)
+          res.nextState = new State(res.nextState)
           resolve(this.fillRes(res)); return })
       }
     })
@@ -223,7 +223,7 @@ export class BotTransitions {
       return 'image'
     } else if (MESTYPES.text in mdata) {
       return 'text'
-    } else throw 'Unknown message type'
+    } else return 'other'
   }
 
   private parseText(mdata: any, params?: any): IBotText_Message {
@@ -267,6 +267,9 @@ export class BotTransitions {
         if (Array.isArray(mdata[type])) {
         res[type] = mdata[type] 
         } else throw 'Text buttons should be an array'
+      
+      } else if (type === MESTYPES.image) {
+        res[type] = mdata[type]
       }
 
       // ... all other cases - TODO
