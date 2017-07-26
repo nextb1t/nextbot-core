@@ -64,6 +64,7 @@ export class BotTransitions {
         }
       }
 
+      // console.log(state, trInfo)
       this.makeUnitTransition(state, trInfo).then((res) => {
         resolve(res)
       }).catch((error) => reject(error)) 
@@ -129,10 +130,35 @@ export class BotTransitions {
 
         res.nextState = nextState
         log.debug(`-> ${nextState}`)
-        resolve(this.fillRes(res, wait)); return
+        let filledRes: ITrResFull = this.fillRes(res, wait)
+        resolve(filledRes); return
 
       // Custom Transiion Case
       } else if ('func' in trInfo) {
+        // console.log('\n************************STATE', state)
+
+        // Gropped messages case
+        if ('index' in state) {
+          // console.log('-- middle item of the gropped state', state.group, state.index)
+          let nextState = state
+          nextState.next()
+          // console.log(nextState)
+          let res = { nextState: nextState }
+          let textData = this.botText[nextState.group]
+          res['message'] = textData[nextState.index]
+
+          // last elem of the group
+          if (textData.length === nextState.index) { //console.log('LAST')
+          } else {
+            let wait = (this.botWait && (nextState.group in this.botWait))
+              ? this.botWait[nextState.group]
+              : undefined
+
+            resolve(this.fillRes(res, wait)); return
+          }
+        }
+      
+        // Not a gropped state transition
         let action = trInfo.func
 
         if (!this.botActions || !(action in this.botActions))
@@ -143,6 +169,7 @@ export class BotTransitions {
           ? this.botText._custom[action] : undefined
 
         // console.log('CUSTOM', params, text, action)
+        // console.log(this.platform, this.botId)
         this.botActions[action](this.userId, params, text, this.platform, this.botId)
         .then((res) => { 
           log.debug(`-> ${res.nextState}`)
@@ -169,6 +196,7 @@ export class BotTransitions {
   }
 
   private fillRes(prevres: ITrRes, wait?: IBotWait_Item): ITrResFull {
+    // console.log('fillRes', wait)
     let res = prevres, botwait: IBotWait_Item = this.botDefaultWait
     
     if (res.nextState.is(IDLE)) {
@@ -176,7 +204,7 @@ export class BotTransitions {
       return <ITrResFull>res
     }
 
-    if (wait) {
+    if (wait && wait != undefined) {
       if ('wait_before' in wait) { botwait.wait_before = wait.wait_before }
       if ('wait_input' in wait) { botwait.wait_input = wait.wait_input }
       if ('typing_on' in wait) { botwait.typing_on = wait.typing_on }
@@ -185,7 +213,7 @@ export class BotTransitions {
     if (prevres.message) { 
       res.type = this.calcMessageType(prevres.message)
     }
-
+    
     res.waitBefore = prevres.waitBefore ? prevres.waitBefore 
       : botwait.wait_before
     res.typingOn = prevres.typingOn ? prevres.typingOn
@@ -215,6 +243,7 @@ export class BotTransitions {
   }
 
   private calcMessageType(mdata: any): string {
+    // console.log('calcMessageType', mdata)
     if (MESTYPES.tbuttons in mdata) {
       return 'tbuttons'
     } else if (MESTYPES.buttons in mdata) {
@@ -223,10 +252,15 @@ export class BotTransitions {
       return 'image'
     } else if (MESTYPES.text in mdata) {
       return 'text'
+    } else if (MESTYPES.generic in mdata) {
+      // console.log('GENERIC!')
+      return 'generic'
     } else return 'other'
   }
 
   private parseText(mdata: any, params?: any): IBotText_Message {
+    // console.log('textData', mdata, params)
+    
     let res: IBotText_Message = {}
     for (let type in mdata) {
 
@@ -263,15 +297,19 @@ export class BotTransitions {
         }
 
       // checking a button field
-      } else if (type === MESTYPES.tbuttons || (type === MESTYPES.buttons)) {
+      } else if (type === MESTYPES.buttons || (type === MESTYPES.tbuttons)) {
         if (Array.isArray(mdata[type])) {
         res[type] = mdata[type] 
         } else throw 'Text buttons should be an array'
       
       } else if (type === MESTYPES.image) {
         res[type] = mdata[type]
+      
+      } else if (type === MESTYPES.generic) {
+        if (Array.isArray(mdata[type])) {
+        res[type] = mdata[type] 
+        } else throw 'Generic should be an array'
       }
-
       // ... all other cases - TODO
     }
     // console.log('res', res)

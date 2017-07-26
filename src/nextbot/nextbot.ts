@@ -17,7 +17,7 @@ export class UserBotFSM extends Event {
     botActions?: IBotActions, platform?: string, botId?: string) {
     super()
     this.userId = userId
-    this.transitions = new BotTransitions(userId, botLogic, botText, botWait, botActions)
+    this.transitions = new BotTransitions(userId, botLogic, botText, botWait, botActions, platform, botId)
     // todo: search for the last state
     this.run(new State(START))
   }

@@ -8,7 +8,7 @@ class UserBotFSM extends typescript_events_1.Event {
     constructor(userId, botLogic, botText, botWait, botActions, platform, botId) {
         super();
         this.userId = userId;
-        this.transitions = new transitions_1.default(userId, botLogic, botText, botWait, botActions);
+        this.transitions = new transitions_1.default(userId, botLogic, botText, botWait, botActions, platform, botId);
         this.run(new state_1.default(config_1.START));
     }
     run(state) {

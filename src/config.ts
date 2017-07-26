@@ -8,13 +8,14 @@ export let CUSTOM = '_custom'
 export let BOTWAIT_DEFAULT = {
   wait_before: 0, typing_on: false, wait_input: 'auto' }
 export let BOTWAIT_INPUTAUTO = { 
-  text: false, image: false, buttons: true, tbuttons: true, empty: true, other: false }
+  text: false, image: false, buttons: true, tbuttons: true, generic: false, empty: true, other: false }
 
 export let MESTYPES = {
   text: 'txt',
   tbuttons: 'tbtn',
   buttons: 'btn',
-  image: 'img'
+  image: 'img',
+  generic: 'generic'
 }
 
 export let log = {

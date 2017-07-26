@@ -9,13 +9,14 @@ exports.BOTWAIT_DEFAULT = {
     wait_before: 0, typing_on: false, wait_input: 'auto'
 };
 exports.BOTWAIT_INPUTAUTO = {
-    text: false, image: false, buttons: true, tbuttons: true, empty: true, other: false
+    text: false, image: false, buttons: true, tbuttons: true, generic: false, empty: true, other: false
 };
 exports.MESTYPES = {
     text: 'txt',
     tbuttons: 'tbtn',
     buttons: 'btn',
-    image: 'img'
+    image: 'img',
+    generic: 'generic'
 };
 exports.log = {
     inline: function (str) {

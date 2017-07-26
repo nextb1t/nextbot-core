@@ -80,10 +80,27 @@ class BotTransitions {
                 }
                 res.nextState = nextState;
                 nextbot_1.log.debug(`-> ${nextState}`);
-                resolve(this.fillRes(res, wait));
+                let filledRes = this.fillRes(res, wait);
+                resolve(filledRes);
                 return;
             }
             else if ('func' in trInfo) {
+                if ('index' in state) {
+                    let nextState = state;
+                    nextState.next();
+                    let res = { nextState: nextState };
+                    let textData = this.botText[nextState.group];
+                    res['message'] = textData[nextState.index];
+                    if (textData.length === nextState.index) {
+                    }
+                    else {
+                        let wait = (this.botWait && (nextState.group in this.botWait))
+                            ? this.botWait[nextState.group]
+                            : undefined;
+                        resolve(this.fillRes(res, wait));
+                        return;
+                    }
+                }
                 let action = trInfo.func;
                 if (!this.botActions || !(action in this.botActions))
                     reject('Custom transition requires action in BotAction');
@@ -126,7 +143,7 @@ class BotTransitions {
             res.typingOn = false;
             return res;
         }
-        if (wait) {
+        if (wait && wait != undefined) {
             if ('wait_before' in wait) {
                 botwait.wait_before = wait.wait_before;
             }
@@ -178,6 +195,9 @@ class BotTransitions {
         else if (config_1.MESTYPES.text in mdata) {
             return 'text';
         }
+        else if (config_1.MESTYPES.generic in mdata) {
+            return 'generic';
+        }
         else
             return 'other';
     }
@@ -219,7 +239,7 @@ class BotTransitions {
                     res[type] = toRandomize[Math.floor(Math.random() * toRandomize.length)];
                 }
             }
-            else if (type === config_1.MESTYPES.tbuttons || (type === config_1.MESTYPES.buttons)) {
+            else if (type === config_1.MESTYPES.buttons || (type === config_1.MESTYPES.tbuttons)) {
                 if (Array.isArray(mdata[type])) {
                     res[type] = mdata[type];
                 }
@@ -228,6 +248,13 @@ class BotTransitions {
             }
             else if (type === config_1.MESTYPES.image) {
                 res[type] = mdata[type];
+            }
+            else if (type === config_1.MESTYPES.generic) {
+                if (Array.isArray(mdata[type])) {
+                    res[type] = mdata[type];
+                }
+                else
+                    throw 'Generic should be an array';
             }
         }
         return res;

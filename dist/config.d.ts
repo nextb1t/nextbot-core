@@ -13,6 +13,7 @@ export declare let BOTWAIT_INPUTAUTO: {
     image: boolean;
     buttons: boolean;
     tbuttons: boolean;
+    generic: boolean;
     empty: boolean;
     other: boolean;
 };
@@ -21,6 +22,7 @@ export declare let MESTYPES: {
     tbuttons: string;
     buttons: string;
     image: string;
+    generic: string;
 };
 export declare let log: {
     inline: (str: any) => void;
