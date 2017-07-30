@@ -1,12 +1,12 @@
-# Nextbot 1.2.1
+# Nextbot 1.3.2
 
 Nextbot is a cross-platform constructor for chatbots based on the Finite-State Machine architecture.  
 You describe bot states and transitions beetween states, Nextbot does all the rest.
 
-You can ask questions or send bug reports here https://github.com/nextb1t/nextbot-core/issues I'll try to help ASAP.
+For questions and bug reports: https://github.com/nextb1t/nextbot-core/issues
 
 ## Get Started
-```
+```console
 npm install nextbot --save
 ```
 
@@ -38,7 +38,7 @@ setTimeout(() => { bot.input('user-id', 'GET_STARTED') }, 2000)
 // waiting for the user messages to render
 bot.on('message', (event) => {
   console.log(`[${event.userId}] Sending "${event.message.type}" message: ${msg.message.content.txt}`)
-  // will be: [user-id] Sending "text" message: Hello, world!
+  // you'll see: [user-id] Sending "text" message: Hello, world!
 })
 ```
 

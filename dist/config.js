@@ -18,23 +18,4 @@ exports.MESTYPES = {
     image: 'img',
     generic: 'generic'
 };
-exports.log = {
-    inline: function (str) {
-        process.stdout.write(str);
-    }
-};
-class Logger {
-    constructor(isDebug) {
-        this.isDebug = isDebug;
-    }
-    debug(str) {
-        if (this.isDebug)
-            console.log(str);
-    }
-    inline(str) {
-        if (this.isDebug)
-            process.stdout.write(str);
-    }
-}
-exports.Logger = Logger;
 //# sourceMappingURL=config.js.map

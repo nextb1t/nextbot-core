@@ -10,7 +10,7 @@ let botLogic = {
 
 let botText = {
   _custom: {
-    customTransitionState: { more: "More Params Here" }
+    customTransitionState: { more: "More Params Here" },
   }
 
   // custom_state: { /// 
@@ -23,7 +23,7 @@ let botActions = {
     // Each function should return a promise with object (res)
     // nextState in res is required, everything else is optional
     let res = { nextState: "customTransitionState" }
-    res.message = { txt: "Text message with" + params + ' and ' + text.some }
+    res.message = { txt: "Text message with" + params + ' and ' + text.more }
     Promise.resolve(res)
   },
 

@@ -2,6 +2,19 @@ export { IBotLogic, IBotText, IBotWait, IBotActions, IBotContent, ITrRes } from 
 import { Nextbot } from "./nextbot/nextbot"
 export default Nextbot
 
+// import { log, Logger, LogLevel } from "./logger"
+
+// log.err('ERRR!\n')
+// log.warn('YARRR!\n')
+
+// let logger = new Logger('huelogger: ', LogLevel.info)
+
+// logger.warn('ololo!')
+// logger.warn('koko').ln()
+// logger.warn('newline')
+// logger.ln()
+// logger.info('kkkk')
+
 // import BotTransitions from "./nextbot/transitions"
 
 // import { botLogic, botText, botWait, botActions } from "./bot-content-sample"
